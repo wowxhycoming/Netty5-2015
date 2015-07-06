@@ -31,6 +31,8 @@ import io.netty.handler.codec.string.StringEncoder;
 
 import java.nio.charset.StandardCharsets;
 
+import com.doctor.netty5.ebook.netty_in_action05.common.NettyUtil;
+
 /**
  * @author doctor
  *
@@ -97,7 +99,8 @@ public class EchoServer {
 
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-			ctx.write("服务器返回：" + msg + "\r\n");
+			System.out.println(msg);
+			ctx.write(NettyUtil.appenEndOfLine("服务器返回：", (String) msg));
 		}
 
 		@Override

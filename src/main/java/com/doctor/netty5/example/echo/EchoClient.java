@@ -32,6 +32,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+import com.doctor.netty5.ebook.netty_in_action05.common.NettyUtil;
+
 /**
  * @author doctor
  *
@@ -101,13 +103,14 @@ public class EchoClient {
 
 		@Override
 		public void channelActive(ChannelHandlerContext ctx) throws Exception {
-			ctx.writeAndFlush("我要连接....、\n\r");
+			ctx.writeAndFlush(NettyUtil.appenEndOfLine("我要连接...."));
 			new Thread(new Hander(ctx)).start();
 		}
 
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			System.out.println(msg);
+
 		}
 
 		@Override
@@ -128,7 +131,7 @@ public class EchoClient {
 		public void run() {
 			while (true) {
 				String nextLine = scanner.nextLine();
-				ctx.writeAndFlush(nextLine + "\r\n");
+				ctx.writeAndFlush(NettyUtil.appenEndOfLine(nextLine));
 			}
 
 		}
