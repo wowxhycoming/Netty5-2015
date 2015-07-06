@@ -28,6 +28,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.ReferenceCountUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -109,13 +110,16 @@ public class EchoClient {
 
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-			System.out.println(msg);
+			try {
+				System.out.println(msg);
+			} finally {
+				// 读完消息记得释放，那写消息为什么不这样操作呢，因为写完消息netty自动释放。
+				// 其操作见：DefaultChannelHandlerInvoker L331-332,不过有这个注释-> promise cancelled
+				// 是不少netty5正式发布的时候会取消呢。
+				// 我们可以使用SimpleChannelInboundHandler作为父类，因为释放操作已实现。
+				ReferenceCountUtil.release(msg);
+			}
 
-		}
-
-		@Override
-		public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-			ctx.flush();
 		}
 	}
 

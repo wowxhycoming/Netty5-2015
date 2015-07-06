@@ -101,6 +101,7 @@ public class EchoServer {
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			System.out.println(msg);
 			ctx.write(NettyUtil.appenEndOfLine("服务器返回：", (String) msg));
+
 		}
 
 		@Override
