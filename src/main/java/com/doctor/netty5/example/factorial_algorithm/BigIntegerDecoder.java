@@ -40,8 +40,10 @@ public final class BigIntegerDecoder extends ByteToMessageDecoder {
 			return; // F（标识—） + 内容长度还没到达。
 		}
 
+		in.markReaderIndex();
 		short magicNumber = in.readUnsignedByte();// 验证F标识
 		if (magicNumber != 'F') {
+			in.resetReaderIndex();
 			throw new RuntimeException("magicNumber must be 'F' ");
 		}
 
@@ -49,6 +51,7 @@ public final class BigIntegerDecoder extends ByteToMessageDecoder {
 		int dataLength = in.readInt();
 
 		if (in.readableBytes() < dataLength) {
+			in.resetReaderIndex();
 			return;
 		}
 
