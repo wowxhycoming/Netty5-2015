@@ -95,7 +95,7 @@ public class ChatRoomServer {
 	}
 
 	private static class ChatRoomServerHandler extends SimpleChannelInboundHandler<String> {
-		// 保存所有客户端连接/静态变量
+		// 保存所有客户端连接/静态变量，我们只管添加遍历它，关闭，会自动调用内部实现，不用我们管理关闭事件
 		private static final ChannelGroup channels = new DefaultChannelGroup(new DefaultEventLoop());
 
 		@Override
@@ -128,13 +128,11 @@ public class ChatRoomServer {
 		public static void closeOperationComplete(Future<? super Void> f) throws Exception {
 			ChannelFuture channelFuture = (ChannelFuture) f;
 			if (channelFuture.isSuccess()) {
-				channels.remove(channelFuture.channel());
 				System.out.println(channelFuture.channel().remoteAddress() + "网络成功关闭");
 
 			} else {
 				System.err.println(channelFuture.channel().remoteAddress() + "网络关闭失败");
 			}
-			channels.remove(channelFuture.cause());
 		}
 	}
 
